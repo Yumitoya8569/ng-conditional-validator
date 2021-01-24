@@ -1,27 +1,67 @@
-# NgConditionalValidator
+# ng-conditional-validator
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.7.
+A dynamically validator for Angaulr Reactive Forms
 
-## Development server
+## Quickstart
+### Running the Sample
+**1. Clone the Git repository**:
+```
+git clone https://github.com/Yumitoya8569/ng-conditional-validator.git
+cd ng-conditional-validator
+npm i
+```
+**2. Run the application**:
+```
+ng run start
+```
+### Build the library
+```
+npm run build:lib
+```
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+### Usage (stateless solution style)
+```typescript
+// when you build form
+buildDemo1() {
+    const dontLoveJob = CondValidator.when(helper => helper.get('loveJob')?.value === false);
+    const whenOther = dontLoveJob.when(helper => helper.get('why')?.value === 'other');
 
-## Code scaffolding
+    this.formDemo1 = this.fb.group({
+        loveJob: [true],
+        why: ['', dontLoveJob.then(Validators.required)],
+        other: ['', whenOther.then(Validators.required)]
+    });
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+    this.formDemo1.valueChanges.subscribe(() => {
+        CondValidator.updateTreeValidity(this.formDemo1);
+    });
+    
+    console.log(this.formDemo1.value); // { loveJob: true, why: '', other: '' }
+}
+```
 
-## Build
+### Usage  (enable solution style)
+enable solution style will control form disable status, if you call form.value you will get only necessary result
+```typescript
+// when you build form
+buildDemo3() {
+    const dontLoveJob = CondValidator.when(helper => helper.get('loveJob')?.value === false);
+    const whenOther = dontLoveJob.when(helper => helper.get('why')?.value === 'other');
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+    this.formDemo3 = this.fb.group({
+        loveJob: [true],
+        why: ['', [dontLoveJob.enable(), Validators.required]],
+        other: ['', [whenOther.enable(), Validators.required]]
+    });
 
-## Running unit tests
+    CondValidator.updateTreeValidity(this.formDemo3); // necessary if use .enable()
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+    this.formDemo3.valueChanges.subscribe(() => {
+        CondValidator.updateTreeValidity(this.formDemo3);
+    });
+    
+    console.log(this.formDemo3.value); // { loveJob: true }
+}
+```
 
-## Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
