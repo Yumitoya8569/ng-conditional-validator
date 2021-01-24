@@ -6,21 +6,19 @@ A dynamically validator for Angaulr Reactive Forms
 
 
 ### Running the Sample
-**1. Clone the Git repository**:
+**1. Clone the Git repository and install the dependencies**:
 ```
 git clone https://github.com/Yumitoya8569/ng-conditional-validator.git
 cd ng-conditional-validator
 npm i
 ```
-**2. Run the application**:
-```
-ng run start
-```
-
-
-### Build the library
+**2. Build the library**:
 ```
 npm run build:lib
+```
+**3. Run the demo**:
+```
+ng run start
 ```
 
 
