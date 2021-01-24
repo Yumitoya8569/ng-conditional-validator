@@ -1,0 +1,169 @@
+<h2>Demo 1 - Collapse</h2>
+<div *ngIf="formDemo1">
+    <div class="group" [formGroup]="formDemo1">
+        Do you love your job?
+        <label>
+            <input type="radio" [value]="true" formControlName="loveJob">
+            <span>Yes</span>
+        </label>
+        <label>
+            <input type="radio" [value]="false" formControlName="loveJob">
+            <span>No</span>
+        </label>
+        <br>
+        <ng-container *ngIf="!formDemo1.get('loveJob')!.value">
+            Why?&nbsp;&nbsp;&nbsp;Because of&nbsp;
+            <label>
+                <input type="radio" value="salary" formControlName="why">
+                <span>salary</span>
+            </label>
+            <label>
+                <input type="radio" value="environment" formControlName="why">
+                <span>environment</span>
+            </label>
+            <label>
+                <input type="radio" value="relationships" formControlName="why">
+                <span>interpersonal relationships</span>
+            </label>
+            <label>
+                <input type="radio" value="other" formControlName="why">
+                <span>other&nbsp;</span>
+            </label>
+            <ng-container *ngIf="formDemo1.get('why')!.value === 'other'">
+                <input formControlName="other">
+            </ng-container>
+        </ng-container>
+    </div>
+    <p [class]="formDemo1.get('why')?.status">why required</p>
+    <p [class]="formDemo1.get('other')?.status">other required</p>
+    <p [class]="formDemo1.status">form status :{{ formDemo1.status }}</p>
+    <p>form value : {{ formDemo1.value | json }}</p>
+</div>
+
+<h2>Demo 2 - Compare</h2>
+<div *ngIf="formDemo2">
+    <div class="group" [formGroup]="formDemo2">
+        password1: <input formControlName="password1"><br>
+        password2: <input formControlName="password2">
+    </div>
+
+    <p [class]="formDemo2.get('password1')?.status">password1 required</p>
+    <p [class]="formDemo2.status">password1 === password2</p>
+    <p [class]="formDemo2.status">form status :{{ formDemo2.status }}</p>
+    <p>form value : {{ formDemo2.value | json }}</p>
+</div>
+
+<h2>Demo 3 - Collapse (with enable solution style)</h2>
+<div *ngIf="formDemo3">
+    <div class="group" [formGroup]="formDemo3">
+        Do you love your job?
+        <label>
+            <input type="radio" [value]="true" formControlName="loveJob">
+            <span>Yes</span>
+        </label>
+        <label>
+            <input type="radio" [value]="false" formControlName="loveJob">
+            <span>No</span>
+        </label>
+        <br>
+        <ng-container *ngIf="!formDemo3.get('loveJob')!.value">
+            Why?&nbsp;&nbsp;&nbsp;Because of&nbsp;
+            <label>
+                <input type="radio" value="salary" formControlName="why">
+                <span>salary</span>
+            </label>
+            <label>
+                <input type="radio" value="environment" formControlName="why">
+                <span>environment</span>
+            </label>
+            <label>
+                <input type="radio" value="relationships" formControlName="why">
+                <span>interpersonal relationships</span>
+            </label>
+            <label>
+                <input type="radio" value="other" formControlName="why">
+                <span>other&nbsp;</span>
+            </label>
+            <ng-container *ngIf="formDemo3.get('why')!.value === 'other'">
+                <input formControlName="other">
+            </ng-container>
+        </ng-container>
+    </div>
+    <p [class]="formDemo3.get('why')?.status">why required</p>
+    <p [class]="formDemo3.get('other')?.status">other required</p>
+    <p [class]="formDemo3.status">form status :{{ formDemo3.status }}</p>
+    <p>form value : {{ formDemo3.value | json }}</p>
+</div>
+
+
+<h2>Demo 4 - Collapse Nested (with enable solution style)</h2>
+<div *ngIf="formDemo4">
+    <div class="group" style="height: 100px;" [formGroup]="formDemo4">
+        question1:
+        <label>
+            <input type="radio" [value]="true" formControlName="question1">
+            <span>Yes</span>
+        </label>
+        <label>
+            <input type="radio" [value]="false" formControlName="question1">
+            <span>No</span>
+        </label>
+        <br>
+        <div *ngIf="formDemo4.get('question1')!.value" class="nested" formGroupName="level2">
+            question2: <input formControlName="question2">(required)<br>
+            <label>
+                <input type="checkbox" formControlName="question3">
+                <span>question3</span>
+            </label>
+            <br>
+            <div *ngIf="formDemo4.get('level2.question3')!.value" class="nested" formGroupName="level3">
+                question4: <input formControlName="question4">(required)<br>
+                question5: <input formControlName="question5">(required)<br>
+            </div>
+        </div>
+    </div>
+    <p [class]="formDemo4.get('level2')?.status">level2</p>
+    <p [class]="formDemo4.get('level2.level3')?.status">level3</p>
+    <p [class]="formDemo4.status">form status :{{ formDemo4.status }}</p>
+    <p>form value : {{ formDemo4.value | json }}</p>
+</div>
+
+
+<h2>Demo 5 - with class variable</h2>
+<div *ngIf="formDemo5">
+    <div class="group" [formGroup]="formDemo5">
+        Do you love your job?
+        <label>
+            <input type="radio" [value]="true" [(ngModel)]="demo5LoveJob" [ngModelOptions]="{standalone: true}">
+            <span>Yes</span>
+        </label>
+        <label>
+            <input type="radio" [value]="false" [(ngModel)]="demo5LoveJob" [ngModelOptions]="{standalone: true}">
+            <span>No</span>
+        </label>
+        &nbsp;&nbsp;&nbsp;(ngModel binding)
+        <br>
+        <ng-container *ngIf="!this.demo5LoveJob">
+            Why?&nbsp;&nbsp;&nbsp;Because of&nbsp;
+            <label>
+                <input type="radio" value="salary" formControlName="why">
+                <span>salary</span>
+            </label>
+            <label>
+                <input type="radio" value="environment" formControlName="why">
+                <span>environment</span>
+            </label>
+            <label>
+                <input type="radio" value="relationships" formControlName="why">
+                <span>interpersonal relationships</span>
+            </label>
+            <label>
+                <input type="radio" value="" formControlName="why">
+                <span>none</span>
+            </label>
+        </ng-container>
+    </div>
+    <p [class]="formDemo5.get('why')?.status">why required</p>
+    <p [class]="formDemo5.status">form status :{{ formDemo5.status }}</p>
+    <p>form value : {{ formDemo5.value | json }}</p>
+</div>
