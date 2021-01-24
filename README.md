@@ -3,6 +3,8 @@
 A dynamically validator for Angaulr Reactive Forms
 
 ## Quickstart
+
+
 ### Running the Sample
 **1. Clone the Git repository**:
 ```
@@ -14,14 +16,19 @@ npm i
 ```
 ng run start
 ```
+
+
 ### Build the library
 ```
 npm run build:lib
 ```
 
-### Usage (stateless solution style)
+
+## Basic Usage
+
+### Usage (stateless solution)
 ```typescript
-// when you build form
+// when build form
 buildDemo1() {
     const dontLoveJob = CondValidator.when(helper => helper.get('loveJob')?.value === false);
     const whenOther = dontLoveJob.when(helper => helper.get('why')?.value === 'other');
@@ -40,10 +47,10 @@ buildDemo1() {
 }
 ```
 
-### Usage  (enable solution style)
-enable solution style will control form disable status, if you call form.value you will get only necessary result
+### Usage  (enable solution)
+enable solution style will control form disable status, when call form.value you will get only necessary result
 ```typescript
-// when you build form
+// when build form
 buildDemo3() {
     const dontLoveJob = CondValidator.when(helper => helper.get('loveJob')?.value === false);
     const whenOther = dontLoveJob.when(helper => helper.get('why')?.value === 'other');
