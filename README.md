@@ -48,7 +48,7 @@ buildDemo1() {
 ```
 
 ### Usage  (enable solution)
-enable solution style will control form disable status, when call form.value you will get only necessary result
+enable solution will control form disable status, when call form.value you will get only necessary result
 ```typescript
 // when build form
 buildDemo3() {
