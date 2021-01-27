@@ -1,6 +1,6 @@
 # ng-conditional-validator
 
-A dynamical validator for Angular Reactive Forms
+A dynamic validator for Angular Reactive Forms
 
 
 ## Quickstart
