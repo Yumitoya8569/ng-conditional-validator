@@ -19,13 +19,13 @@ npm run build:lib
 ```
 **3. Run the demo**:
 ```
-ng run start
+npm run start
 ```
 
 
 ## Basic Usage
 
-### Usage (stateless solution)
+### Usage (use then)
 ```typescript
 // when build form
 buildDemo1() {
@@ -39,6 +39,9 @@ buildDemo1() {
     });
 
     this.formDemo1.valueChanges.subscribe(() => {
+        // your code here ...
+        
+        // necessary
         CondValidator.updateTreeValidity(this.formDemo1);
     });
     
@@ -46,8 +49,8 @@ buildDemo1() {
 }
 ```
 
-### Usage  (enable solution)
-enable solution will control form disable status, when call form.value you will get only necessary result
+### Usage  (use enable)
+use enable will control form disable status, when call form.value you will get only necessary result
 ```typescript
 // when build form
 buildDemo3() {
@@ -60,9 +63,13 @@ buildDemo3() {
         other: ['', whenOther.enable(Validators.required)]
     });
 
-    CondValidator.updateTreeValidity(this.formDemo3); // necessary if use .enable()
+
+    CondValidator.updateTreeValidity(this.formDemo3); // necessary
 
     this.formDemo3.valueChanges.subscribe(() => {
+        // your code here ...
+        
+        // necessary
         CondValidator.updateTreeValidity(this.formDemo3);
     });
     
