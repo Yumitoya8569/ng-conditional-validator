@@ -20,7 +20,6 @@ export class ConditionalValidatorBuilder<T extends ConditionalValidatorHelper> {
 
             if (conditionPass) {
                 if (Array.isArray(validators)) {
-
                     return Validators.compose(validators)!(ctrl);
                 } else {
                     return validators(ctrl) || null;
@@ -31,18 +30,21 @@ export class ConditionalValidatorBuilder<T extends ConditionalValidatorHelper> {
         }
     }
 
-    enable(): ValidatorFn {
+    enable(validators?: ValidatorFn | ValidatorFn[]): ValidatorFn {
         return (ctrl) => {
             this.helper.control = ctrl;
             const conditionPass = this.unionConditon.every(condition => condition(this.helper));
+            (ctrl as ConditionalControl).conditionalDisable = !conditionPass; // hack
 
-            // hack
-            if (conditionPass) {
-                (ctrl as ConditionalControl).conditionalDisable = false;
+            if (conditionPass && !!validators) {
+                if (Array.isArray(validators)) {
+                    return Validators.compose(validators)!(ctrl);
+                } else {
+                    return validators(ctrl) || null;
+                }
             } else {
-                (ctrl as ConditionalControl).conditionalDisable = true;
+                return null;
             }
-            return null;
         };
     }
 }

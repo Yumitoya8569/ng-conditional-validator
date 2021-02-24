@@ -73,8 +73,8 @@ export class ShowCaseComponent implements OnInit {
 
         this.formDemo3 = this.fb.group({
             loveJob: [true],
-            why: ['', [dontLoveJob.enable(), Validators.required]],
-            other: ['', [whenOther.enable(), Validators.required]]
+            why: ['', dontLoveJob.enable(Validators.required)],
+            other: ['', whenOther.enable(Validators.required)]
         });
 
         CondValidator.updateTreeValidity(this.formDemo3); // necessary if use .enable()
@@ -116,7 +116,7 @@ export class ShowCaseComponent implements OnInit {
         const dontLoveJob = CondValidator.when(() => !this.demo5LoveJob);
 
         this.formDemo5 = this.fb.group({
-            why: ['', [dontLoveJob.enable(), Validators.required]]
+            why: ['', dontLoveJob.enable(Validators.required)]
         });
 
         CondValidator.updateTreeValidity(this.formDemo5); // necessary if use .enable()

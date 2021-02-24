@@ -55,8 +55,8 @@ buildDemo3() {
 
     this.formDemo3 = this.fb.group({
         loveJob: [true],
-        why: ['', [dontLoveJob.enable(), Validators.required]],
-        other: ['', [whenOther.enable(), Validators.required]]
+        why: ['', dontLoveJob.enable(Validators.required)],
+        other: ['', whenOther.enable(Validators.required)]
     });
 
     CondValidator.updateTreeValidity(this.formDemo3); // necessary if use .enable()
