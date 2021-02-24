@@ -41,8 +41,7 @@ buildDemo1() {
     this.formDemo1.valueChanges.subscribe(() => {
         // your code here ...
         
-        // necessary
-        CondValidator.updateTreeValidity(this.formDemo1);
+        CondValidator.updateTreeValidity(this.formDemo1); // necessary
     });
     
     console.log(this.formDemo1.value); // { loveJob: true, why: '', other: '' }
@@ -69,8 +68,7 @@ buildDemo3() {
     this.formDemo3.valueChanges.subscribe(() => {
         // your code here ...
         
-        // necessary
-        CondValidator.updateTreeValidity(this.formDemo3);
+        CondValidator.updateTreeValidity(this.formDemo3); // necessary
     });
     
     console.log(this.formDemo3.value); // { loveJob: true }
