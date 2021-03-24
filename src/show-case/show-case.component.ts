@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ConditionalValidatorHelper, ConditionalValidatorBuilder, CondValidator } from 'ng-conditional-validator-lib';
+import { Observable, of } from 'rxjs';
+import { delay, map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-show-case',
@@ -44,7 +46,10 @@ export class ShowCaseComponent implements OnInit {
         this.formDemo1 = this.fb.group({
             loveJob: [true],
             why: ['', dontLoveJob.then(Validators.required)],
-            other: ['', whenOther.then(Validators.required)]
+            other: ['', {
+                updateOn: 'blur',
+                asyncValidators: whenOther.thenAsync([this.asyncEmailValidator])
+            }]
         });
 
         this.formDemo1.valueChanges.subscribe(() => {
@@ -82,7 +87,6 @@ export class ShowCaseComponent implements OnInit {
         this.formDemo3.valueChanges.subscribe(() => {
             CondValidator.updateTreeValidity(this.formDemo3);
         });
-
     }
 
     buildDemo4() {
@@ -124,6 +128,16 @@ export class ShowCaseComponent implements OnInit {
         this.formDemo5.valueChanges.subscribe(() => {
             CondValidator.updateTreeValidity(this.formDemo5);
         });
+    }
+
+    asyncEmailValidator(control: AbstractControl): Observable<ValidationErrors | null> {
+        return of(control.value as string).pipe(
+            delay(2000),
+            map(res => {
+                const regx = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+                return regx.test(res) ? null :  { emaliErr: true };
+            })
+        );
     }
 }
 

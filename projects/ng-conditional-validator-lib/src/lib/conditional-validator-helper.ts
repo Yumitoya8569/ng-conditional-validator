@@ -8,8 +8,13 @@ export class ConditionalValidatorHelper {
         return this.control?.value;
     }
 
+    /**
+     * Get the control by the given path
+     * 
+     * It will try from current to root until getting a control
+     */
     get(path: string) {
-        if(this.control){
+        if (this.control) {
             let result: AbstractControl | null = null;
             let target: AbstractControl | null = this.control;
 
