@@ -69,7 +69,7 @@ if not pass condition, it will diable the control.
 when call form.value it only return enabled control's value.
 ```typescript
 buildDemo3() {
-   const contactMe = CondValidator.when(query => query.selectValue('dontContactMe') === false);
+    const contactMe = CondValidator.when(query => query.selectValue('dontContactMe') === false);
     const contactByEmail = contactMe.when(query => query.selectValue('contactBy') === 'email');
 
     this.formDemo3 = this.fb.group({
