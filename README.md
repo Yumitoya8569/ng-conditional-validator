@@ -4,6 +4,7 @@ An angular tool help you to build dynamic nested form validation
 ## Features
 ✅ Dynamic nested form validation<br>
 ✅ Based on the original angular form, not the customized version<br>
+✅ Filter effective value<br>
 
 ## Quickstart
 
