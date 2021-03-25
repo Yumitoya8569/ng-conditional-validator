@@ -1,5 +1,5 @@
 # ng-conditional-validator
-A angular tool help you to build dynamic nested form validation
+An angular tool help you to build dynamic nested form validation
 
 ## Features
 ✅ Dynamic nested form validation<br>
