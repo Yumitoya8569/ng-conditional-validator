@@ -42,7 +42,7 @@ CondValidator.updateTreeValidity(this.formDemo1);
 ```
 
 ### `then(validators)`
-if not pass condition, it will not run the given validators
+if the condition isn't passed, it will not run the given validators
 ```typescript
 buildDemo1() {
     const contactMe = CondValidator.when(query => query.selectValue('dontContactMe') === false);
@@ -66,7 +66,7 @@ buildDemo1() {
 ```
 
 ### `enable(validators)`
-if not pass condition, it will diable the control.
+if the condition isn't passed, it will diable the control.
 when call form.value it only return enabled control's value.
 ```typescript
 buildDemo3() {
@@ -91,7 +91,7 @@ buildDemo3() {
 ```
 
 ### `then(validators, { resetBy: ... })`
-if not pass condition, it will not run the given validators and will reset control's value
+if the condition isn't passed, it will not run the given validators and will reset control's value
 ```typescript
 get contactMe5(){ return this.formDemo5?.get('dontContactMe')?.value === false; }
 get contactByEmail5(){ return this.formDemo5?.get('contactBy')?.value === 'email'; }
@@ -116,7 +116,7 @@ buildDemo5(){
 ```
 
 ### `thenAsync(asyncValidators)`
-if not pass condition, it will not run the given async validators
+if the condition isn't passed, it will not run the given async validators
 ```typescript
 buildDemo1() {
     const contactMe = CondValidator.when(query => query.selectValue('dontContactMe') === false);
