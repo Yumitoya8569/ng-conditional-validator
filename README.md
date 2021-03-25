@@ -1,7 +1,9 @@
 # ng-conditional-validator
+A angular tool help you to build dynamic nested form validation
 
-A dynamic validator for Angular Reactive Forms
-
+## Features
+✅ Dynamic nested form validation<br>
+✅ Based on the original angular form, not the customized version<br>
 
 ## Quickstart
 
@@ -30,6 +32,12 @@ help you concatenate the condition
 ```typescript
 const contactMe = CondValidator.when(query => query.selectValue('dontContactMe') === false);
 const contactByEmail = contactMe.when(query => query.selectValue('contactBy') === 'email');
+```
+
+### `updateTreeValidity(form)`
+update your form validation
+```typescript
+CondValidator.updateTreeValidity(this.formDemo1);
 ```
 
 ### `then(validators)`
@@ -105,4 +113,28 @@ buildDemo5(){
 }
 ```
 
+### `thenAsync(asyncValidators)`
+if not pass condition, it will not run the given async validators
+```typescript
+buildDemo1() {
+    const contactMe = CondValidator.when(query => query.selectValue('dontContactMe') === false);
+    const contactByEmail = contactMe.when(query => query.selectValue('contactBy') === 'email');
+
+    this.formDemo1 = this.fb.group({
+        dontContactMe: [false],
+        contactBy: ['', contactMe.then(Validators.required)],
+        email: ['', {
+            updateOn: 'blur',
+            asyncValidators: contactByEmail.thenAsync(this.asyncEmailValidator)
+        }]
+    });
+
+    CondValidator.updateTreeValidity(this.formDemo1);
+    this.formDemo1.valueChanges.subscribe(() => {
+        // your code here ...
+
+        CondValidator.updateTreeValidity(this.formDemo1);
+    });
+}
+```
 
