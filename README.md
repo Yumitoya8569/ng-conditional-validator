@@ -4,7 +4,7 @@ An angular tool help you to build dynamic nested form validation
 ## Features
 ✅ Dynamic nested form validation<br>
 ✅ Based on the original angular form, not the customized version<br>
-✅ Filter effective value<br>
+✅ Filter out  effective value<br>
 
 ## Quickstart
 
@@ -95,6 +95,7 @@ if not pass condition, it will not run the given validators and will reset contr
 ```typescript
 get contactMe5(){ return this.formDemo5?.get('dontContactMe')?.value === false; }
 get contactByEmail5(){ return this.formDemo5?.get('contactBy')?.value === 'email'; }
+
 buildDemo5(){
     const contactMe = CondValidator.when(() => this.contactMe5);
     const contactByEmail = contactMe.when(() => this.contactByEmail5);
