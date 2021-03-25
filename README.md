@@ -33,7 +33,7 @@ const contactByEmail = contactMe.when(query => query.selectValue('contactBy') ==
 ```
 
 ### `then(validators)`
-if not pass condition, it doesn't run the given validators
+if not pass condition, it will not run the given validators
 ```typescript
 buildDemo1() {
     const contactMe = CondValidator.when(query => query.selectValue('dontContactMe') === false);
@@ -57,9 +57,8 @@ buildDemo1() {
 ```
 
 ### `enable(validators)`
-enable(validators) will control form disable status
-if not pass condition, it will diable the control
-when call form.value it only return enabled control's value
+if not pass condition, it will diable the control.
+when call form.value it only return enabled control's value.
 ```typescript
 buildDemo3() {
    const contactMe = CondValidator.when(query => query.selectValue('dontContactMe') === false);
@@ -83,8 +82,10 @@ buildDemo3() {
 ```
 
 ### `then(validators, { resetBy: ... })`
-if not pass condition, it doesn't run the given validators and will reset control's value
+if not pass condition, it will not run the given validators and will reset control's value
 ```typescript
+get contactMe5(){ return this.formDemo5?.get('dontContactMe')?.value === false; }
+get contactByEmail5(){ return this.formDemo5?.get('contactBy')?.value === 'email'; }
 buildDemo5(){
     const contactMe = CondValidator.when(() => this.contactMe5);
     const contactByEmail = contactMe.when(() => this.contactByEmail5);
