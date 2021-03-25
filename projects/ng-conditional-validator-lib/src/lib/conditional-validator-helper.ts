@@ -9,11 +9,11 @@ export class ConditionalValidatorHelper {
     }
 
     /**
-     * Get the control by the given path
+     * Select the control with given path
      * 
      * It will try from current to root until getting a control
      */
-    get(path: string) {
+    select(path: string) {
         if (this.control) {
             let result: AbstractControl | null = null;
             let target: AbstractControl | null = this.control;
@@ -26,5 +26,14 @@ export class ConditionalValidatorHelper {
             return result;
         }
         return null;
+    }
+
+    /**
+     * Select the control value with given path
+     * 
+     * note: It will try from current to root until getting a control
+     */
+    selectValue<T = any>(path: string): T{
+        return this.select(path)?.value;
     }
 }

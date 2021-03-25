@@ -17,16 +17,12 @@ export class ShowCaseComponent implements OnInit {
     formDemo4!: FormGroup;
     formDemo5!: FormGroup;
 
-    _demo5LoveJob = true;
-    get demo5LoveJob() {
-        return this._demo5LoveJob;
-
+    get contactMe5(){
+        return this.formDemo5?.get('dontContactMe')?.value === false;
     }
-    set demo5LoveJob(val: boolean) {
-        if (this._demo5LoveJob !== val) {
-            this._demo5LoveJob = val;
-            CondValidator.updateTreeValidity(this.formDemo5); // don't forget this
-        }
+
+    get contactByEmail5(){
+        return this.formDemo5?.get('contactBy')?.value === 'email';
     }
 
     constructor(private fb: FormBuilder) { }
@@ -40,58 +36,59 @@ export class ShowCaseComponent implements OnInit {
     }
 
     buildDemo1() {
-        const dontLoveJob = CondValidator.when(helper => helper.get('loveJob')?.value === false);
-        const whenOther = dontLoveJob.when(helper => helper.get('why')?.value === 'other');
+        const contactMe = CondValidator.when(query => query.selectValue('dontContactMe') === false);
+        const contactByEmail = contactMe.when(query => query.selectValue('contactBy') === 'email');
 
         this.formDemo1 = this.fb.group({
-            loveJob: [true],
-            why: ['', dontLoveJob.then(Validators.required)],
-            other: ['', {
+            dontContactMe: [false],
+            contactBy: ['', contactMe.then(Validators.required)],
+            email: ['', {
                 updateOn: 'blur',
-                asyncValidators: whenOther.thenAsync([this.asyncEmailValidator])
+                asyncValidators: contactByEmail.thenAsync(this.asyncEmailValidator)
             }]
         });
 
+        CondValidator.updateTreeValidity(this.formDemo1);
         this.formDemo1.valueChanges.subscribe(() => {
             CondValidator.updateTreeValidity(this.formDemo1);
         });
     }
 
     buildDemo2() {
-        const notEqual = CondValidator.when(helper => helper.get('password1')?.value !== helper.get('password2')?.value);
+        const notEqual = CondValidator.when(query => query.selectValue('password') !== query.selectValue('repeat'));
 
         this.formDemo2 = this.fb.group({
-            password1: ['', Validators.required],
-            password2: ['']
+            password: ['', Validators.required],
+            repeat: ['']
         }, {
             validators: notEqual.then(CondValidator.invalid())
         });
 
+        CondValidator.updateTreeValidity(this.formDemo2);
         this.formDemo2.valueChanges.subscribe(() => {
             CondValidator.updateTreeValidity(this.formDemo2);
         });
     }
 
     buildDemo3() {
-        const dontLoveJob = CondValidator.when(helper => helper.get('loveJob')?.value === false);
-        const whenOther = dontLoveJob.when(helper => helper.get('why')?.value === 'other');
+        const contactMe = CondValidator.when(query => query.selectValue('dontContactMe') === false);
+        const contactByEmail = contactMe.when(query => query.selectValue('contactBy') === 'email');
 
         this.formDemo3 = this.fb.group({
-            loveJob: [true],
-            why: ['', dontLoveJob.enable(Validators.required)],
-            other: ['', whenOther.enable(Validators.required)]
+            dontContactMe: [false],
+            contactBy: ['', contactMe.enable(Validators.required)],
+            email: ['', contactByEmail.enable(Validators.required)]
         });
 
-        CondValidator.updateTreeValidity(this.formDemo3); // necessary if use .enable()
-
+        CondValidator.updateTreeValidity(this.formDemo3);
         this.formDemo3.valueChanges.subscribe(() => {
             CondValidator.updateTreeValidity(this.formDemo3);
         });
     }
 
     buildDemo4() {
-        const needLevel2 = CondValidator.when(helper => helper?.get('question1')?.value === true);
-        const needLevel3 = CondValidator.when(helper => helper?.get('question3')?.value === true);
+        const needLevel2 = CondValidator.when(query => query.select('question1')?.value === true);
+        const needLevel3 = CondValidator.when(query => query.select('question3')?.value === true);
 
         this.formDemo4 = this.fb.group({
             question1: [false],
@@ -109,22 +106,23 @@ export class ShowCaseComponent implements OnInit {
             })
         });
 
-        CondValidator.updateTreeValidity(this.formDemo4); // necessary if use .enable()
-
+        CondValidator.updateTreeValidity(this.formDemo4);
         this.formDemo4.valueChanges.subscribe(() => {
             CondValidator.updateTreeValidity(this.formDemo4);
         });
     }
 
-    buildDemo5() {
-        const dontLoveJob = CondValidator.when(() => !this.demo5LoveJob);
+    buildDemo5(){
+        const contactMe = CondValidator.when(() => this.contactMe5);
+        const contactByEmail = contactMe.when(() => this.contactByEmail5);
 
         this.formDemo5 = this.fb.group({
-            why: ['', dontLoveJob.enable(Validators.required)]
+            dontContactMe: [false],
+            contactBy: ['', contactMe.then(Validators.required, { resetBy: '' })],
+            email: ['', contactByEmail.then(Validators.required, { resetBy: '' })]
         });
 
-        CondValidator.updateTreeValidity(this.formDemo5); // necessary if use .enable()
-
+        CondValidator.updateTreeValidity(this.formDemo5);
         this.formDemo5.valueChanges.subscribe(() => {
             CondValidator.updateTreeValidity(this.formDemo5);
         });
@@ -150,6 +148,6 @@ class CustomValidator {
 
 class CustomHelper extends ConditionalValidatorHelper {
     equal(path1: string, path2: string) {
-        return this.get(path1)?.value === this.get(path2)?.value;
+        return this.select(path1)?.value === this.select(path2)?.value;
     }
 }

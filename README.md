@@ -25,53 +25,82 @@ npm run start
 
 ## Basic Usage
 
-### Usage (use then)
+### `when(condition)`
+help you concatenate the condition
 ```typescript
-// when build form
+const contactMe = CondValidator.when(query => query.selectValue('dontContactMe') === false);
+const contactByEmail = contactMe.when(query => query.selectValue('contactBy') === 'email');
+```
+
+### `then(validators)`
+if not pass condition, it doesn't run the given validators
+```typescript
 buildDemo1() {
-    const dontLoveJob = CondValidator.when(helper => helper.get('loveJob')?.value === false);
-    const whenOther = dontLoveJob.when(helper => helper.get('why')?.value === 'other');
+    const contactMe = CondValidator.when(query => query.selectValue('dontContactMe') === false);
+    const contactByEmail = contactMe.when(query => query.selectValue('contactBy') === 'email');
 
     this.formDemo1 = this.fb.group({
-        loveJob: [true],
-        why: ['', dontLoveJob.then(Validators.required)],
-        other: ['', whenOther.then(Validators.required)]
+        dontContactMe: [false],
+        contactBy: ['', contactMe.then(Validators.required)],
+        email: ['', contactByEmail.then(Validators.required)]
     });
 
+    CondValidator.updateTreeValidity(this.formDemo1);
     this.formDemo1.valueChanges.subscribe(() => {
         // your code here ...
-        
-        CondValidator.updateTreeValidity(this.formDemo1); // necessary
+
+        CondValidator.updateTreeValidity(this.formDemo1);
     });
     
-    console.log(this.formDemo1.value); // { loveJob: true, why: '', other: '' }
+    console.log(this.formDemo1.value); // { dontContactMe: false, contactBy: '', email: '' }
 }
 ```
 
-### Usage  (use enable)
-use enable will control form disable status, when call form.value you will get only necessary result
+### `enable(validators)`
+enable(validators) will control form disable status
+if not pass condition, it will diable the control
+when call form.value it only return enabled control's value
 ```typescript
-// when build form
 buildDemo3() {
-    const dontLoveJob = CondValidator.when(helper => helper.get('loveJob')?.value === false);
-    const whenOther = dontLoveJob.when(helper => helper.get('why')?.value === 'other');
+   const contactMe = CondValidator.when(query => query.selectValue('dontContactMe') === false);
+    const contactByEmail = contactMe.when(query => query.selectValue('contactBy') === 'email');
 
     this.formDemo3 = this.fb.group({
-        loveJob: [true],
-        why: ['', dontLoveJob.enable(Validators.required)],
-        other: ['', whenOther.enable(Validators.required)]
+        dontContactMe: [false],
+        contactBy: ['', contactMe.enable(Validators.required)],
+        email: ['', contactByEmail.enable(Validators.required)]
     });
 
-
-    CondValidator.updateTreeValidity(this.formDemo3); // necessary
-
+    CondValidator.updateTreeValidity(this.formDemo3);
     this.formDemo3.valueChanges.subscribe(() => {
         // your code here ...
-        
-        CondValidator.updateTreeValidity(this.formDemo3); // necessary
+
+        CondValidator.updateTreeValidity(this.formDemo3);
     });
-    
-    console.log(this.formDemo3.value); // { loveJob: true }
+
+    console.log(this.formDemo3.value); // { dontContactMe: false }
+}
+```
+
+### `then(validators, { resetBy: ... })`
+if not pass condition, it doesn't run the given validators and will reset control's value
+```typescript
+buildDemo5(){
+    const contactMe = CondValidator.when(() => this.contactMe5);
+    const contactByEmail = contactMe.when(() => this.contactByEmail5);
+
+    this.formDemo5 = this.fb.group({
+        dontContactMe: [false],
+        contactBy: ['', contactMe.then(Validators.required, { resetBy: '' })],
+        email: ['', contactByEmail.then(Validators.required, { resetBy: '' })]
+    });
+
+    CondValidator.updateTreeValidity(this.formDemo5);
+    this.formDemo5.valueChanges.subscribe(() => {
+        // your code here ...
+
+        CondValidator.updateTreeValidity(this.formDemo5);
+    });
 }
 ```
 

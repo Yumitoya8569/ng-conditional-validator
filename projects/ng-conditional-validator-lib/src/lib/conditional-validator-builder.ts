@@ -64,7 +64,7 @@ export class ConditionalValidatorBuilder<T extends ConditionalValidatorHelper> {
     /**
      * Run async validators when condition pass.
      * 
-     * A control only exist one in the current version.
+     * Note: In current version, A control can only exist one.
      */
     thenAsync(validators: AsyncValidatorFn | AsyncValidatorFn[]): AsyncValidatorFn {
         return (ctrl: ConditionalControl) => {
