@@ -1,4 +1,6 @@
 # ng-conditional-validator
+[![npm](https://img.shields.io/npm/dm/ng-conditional-validator.svg)](https://www.npmjs.com/package/ng-conditional-validator)
+
 An angular tool help you to build dynamic nested form validation
 
 ## Features
@@ -9,8 +11,12 @@ An angular tool help you to build dynamic nested form validation
 
 ## Quickstart
 
+### Installing
+```
+npm i ng-conditional-validator
+```
 
-### Running the Sample
+### Running the showcase
 **1. Clone the Git repository and install the dependencies**:
 ```
 git clone https://github.com/Yumitoya8569/ng-conditional-validator.git
@@ -25,7 +31,6 @@ npm run build:lib
 ```
 npm run start
 ```
-
 
 ## Basic Usage
 

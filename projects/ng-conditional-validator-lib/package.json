@@ -1,6 +1,28 @@
 {
-  "name": "ng-conditional-validator-lib",
-  "version": "0.0.1",
+  "name": "ng-conditional-validator",
+  "version": "1.0.1",
+  "keywords": [
+    "angular",
+    "reactive",
+    "form",
+    "dynamic",
+    "condition",
+    "validation",
+    "validator"
+  ],
+  "license": "MIT",
+  "author": "yumitoya8569",
+  "contributors": [
+    "yumitoya8569"
+  ],
+  "homepage": "https://github.com/Yumitoya8569/ng-conditional-validator",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Yumitoya8569/ng-conditional-validator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Yumitoya8569/ng-conditional-validator/issues"
+  },
   "peerDependencies": {
     "@angular/common": "^11.0.9",
     "@angular/core": "^11.0.9"
