@@ -4,7 +4,8 @@ An angular tool help you to build dynamic nested form validation
 ## Features
 ✅ Dynamic nested form validation<br>
 ✅ Based on the original angular form, not the customized version<br>
-✅ Filter out  effective value<br>
+✅ Works with other stateless validator<br>
+✅ Filter out effective value<br>
 
 ## Quickstart
 
@@ -29,7 +30,7 @@ npm run start
 ## Basic Usage
 
 ### `when(condition)`
-help you concatenate the condition
+help you build the condition
 ```typescript
 const contactMe = CondValidator.when(query => query.selectValue('dontContactMe') === false);
 const contactByEmail = contactMe.when(query => query.selectValue('contactBy') === 'email');
@@ -140,3 +141,24 @@ buildDemo1() {
 }
 ```
 
+### `invalid(errMsg)`
+a validators always return invalid
+```typescript
+buildDemo2() {
+    const notEqual = CondValidator.when(query => query.selectValue('password') !== query.selectValue('repeat'));
+
+    this.formDemo2 = this.fb.group({
+        password: ['', Validators.required],
+        repeat: ['']
+    }, {
+        validators: notEqual.then(CondValidator.invalid()) // this line help you check repeat password
+    });
+
+    CondValidator.updateTreeValidity(this.formDemo2);
+    this.formDemo2.valueChanges.subscribe(() => {
+        // your code here ...
+
+        CondValidator.updateTreeValidity(this.formDemo2);
+    });
+}
+```
