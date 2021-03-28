@@ -16,6 +16,11 @@ An angular tool help you to build dynamic nested form validation
 npm i ng-conditional-validator
 ```
 
+### Import
+```
+import { CondValidator } from 'ng-conditional-validator';
+```
+
 ### Running the showcase
 **1. Clone the Git repository and install the dependencies**:
 ```
