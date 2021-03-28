@@ -1,6 +1,4 @@
 # ng-conditional-validator
-[![npm](https://img.shields.io/npm/dm/ng-conditional-validator.svg)](https://www.npmjs.com/package/ng-conditional-validator)
-
 An angular tool help you to build dynamic nested form validation
 
 ## Features
