@@ -9,7 +9,7 @@ Angular library help you to build reactive forms dynamic validation
 
 ## Quickstart
 
-### Installing
+### Install
 ```
 npm i ng-conditional-validator
 ```
