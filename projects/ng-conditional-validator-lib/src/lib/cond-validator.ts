@@ -11,17 +11,17 @@ export class CondValidator {
         return new ConditionalValidatorBuilder(new ConditionalValidatorHelper(), [condition]);
     }
 
-    static updateTreeValidity(control: AbstractControl, isScopeRoot = true) {
-        const ctrl = control as ConditionalControl;
+    static updateTreeValidity(control: AbstractControl, isRoot = true) {
+        let ctrl = control as ConditionalControl;
         let oldStatus = ctrl.status;
         let anyStatusChanges = false;
 
         // enable if ctrl is disabled by this lib
         if (ctrl.conditionDisable === true) {
-            ctrl.enable({ onlySelf: true, emitEvent: false });
+            ctrl.enable({ onlySelf: true, emitEvent: !isRoot });
         }
 
-        // update children
+        /* update children */
         if (ctrl instanceof FormGroup) {
             Object.keys(ctrl.controls).forEach(key => {
                 anyStatusChanges = this.updateTreeValidity(ctrl.get(key)!, false) || anyStatusChanges;
@@ -32,31 +32,35 @@ export class CondValidator {
             });
         }
 
-        // update self, then update ancestors if self is scope root
-        let target: ConditionalControl | null = ctrl;
-        do {
-            target.updateValueAndValidity({ onlySelf: true, emitEvent: false });
 
-            // disable if ctrl is not pass condition, when use diable option
-            if (target === ctrl && target.conditionDisable === true) {
-                target.disable({ onlySelf: true, emitEvent: false });
-            }
+        /* update self */
+        ctrl = control as ConditionalControl;
+        ctrl.updateValueAndValidity({ onlySelf: true, emitEvent: !isRoot });
 
-            // reset if ctrl is not pass condition, when use reset option
-            if (target === ctrl && target.conditionReset !== undefined) {
-                target.setValue('',{ onlySelf: true, emitEvent: false });
-            }
+        // reset if ctrl is not pass condition, when use reset option
+        if (ctrl.conditionReset !== undefined) {
+            ctrl.setValue('', { onlySelf: true, emitEvent: !isRoot });
+        }
 
-            // only emit if status change
-            if (anyStatusChanges || target.status !== oldStatus) {
-                const statusChanges = target.statusChanges as EventEmitter<any>;
-                statusChanges.emit(target.status);
+        // disable if ctrl is not pass condition, when use diable option
+        if (ctrl.conditionDisable === true) {
+            ctrl.disable({ onlySelf: true, emitEvent: !isRoot });
+        }
+
+        // emit if self or child status change
+        if(isRoot){
+            if (anyStatusChanges || ctrl.status !== oldStatus) {
                 anyStatusChanges = true;
+                const statusChanges = ctrl.statusChanges as EventEmitter<any>;
+                statusChanges.emit(ctrl.status);
             }
+        }
 
-            target = target.parent;
-            oldStatus = target?.status ?? '';
-        } while (isScopeRoot && target)
+
+        /* update ancestors */
+        if (isRoot) {
+            ctrl.parent?.updateValueAndValidity({ onlySelf: false, emitEvent: true });
+        }
 
         return anyStatusChanges;
     }
