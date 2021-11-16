@@ -12,57 +12,77 @@ export class CondValidator {
     }
 
     static updateTreeValidity(control: AbstractControl, isRoot = true) {
+        const oldStatus = control.status;
+        const oldValue = control.value;
         let ctrl = control as ConditionalControl;
-        let oldStatus = ctrl.status;
-        let anyStatusChanges = false;
-
-        // enable if ctrl is disabled by this lib
-        if (ctrl.conditionDisable === true) {
-            ctrl.enable({ onlySelf: true, emitEvent: !isRoot });
-        }
+        let anyValueChange = false;
+        let anyStatusChange = false;
+        let isFormControl = false;
 
         /* update children */
         if (ctrl instanceof FormGroup) {
             Object.keys(ctrl.controls).forEach(key => {
-                anyStatusChanges = this.updateTreeValidity(ctrl.get(key)!, false) || anyStatusChanges;
+                const res = this.updateTreeValidity(ctrl.get(key)!, false);
+                anyValueChange = anyValueChange || res.anyValueChange;
+                anyStatusChange = anyStatusChange || res.anyStatusChange;
             });
         } else if (ctrl instanceof FormArray) {
             ctrl.controls.forEach(child => {
-                anyStatusChanges = this.updateTreeValidity(child, false) || anyStatusChanges;
+                const res = this.updateTreeValidity(child, false);
+                anyValueChange = anyValueChange || res.anyValueChange;
+                anyStatusChange = anyStatusChange || res.anyStatusChange;
             });
+        } else if (ctrl instanceof FormControl) {
+            isFormControl = true;
         }
 
+        ctrl = ctrl as ConditionalControl; // fix Typescript type assertion bug
 
         /* update self */
-        ctrl = control as ConditionalControl;
-        ctrl.updateValueAndValidity({ onlySelf: true, emitEvent: !isRoot });
+        // enable if ctrl is disabled by this lib
+        if (ctrl.disabled && ctrl.conditionDisable) {
+            ctrl.conditionDisable = undefined;
+            ctrl.enable({ onlySelf: true, emitEvent: false });
+        }
 
-        // reset if ctrl is not pass condition, when use reset option
+        // update ctrl
+        ctrl.updateValueAndValidity({ onlySelf: true, emitEvent: false });
+
+        // do noting, whe ctrl is disabled
+        if (ctrl.disabled) {
+            return { anyValueChange, anyStatusChange };
+        }
+
+        // reset value if ctrl is not pass condition, when use reset option
         if (ctrl.conditionReset !== undefined) {
-            ctrl.setValue('', { onlySelf: true, emitEvent: !isRoot });
+            ctrl.setValue('', { onlySelf: true, emitEvent: false });
         }
 
         // disable if ctrl is not pass condition, when use diable option
-        if (ctrl.conditionDisable === true) {
-            ctrl.disable({ onlySelf: true, emitEvent: !isRoot });
+        if (ctrl.conditionDisable) {
+            ctrl.disable({ onlySelf: true, emitEvent: false });
         }
 
-        // emit if self or child status change
-        if(isRoot){
-            if (anyStatusChanges || ctrl.status !== oldStatus) {
-                anyStatusChanges = true;
+        // emit if value change
+        anyValueChange = anyValueChange || (isFormControl && ctrl.value !== oldValue);
+        if (anyValueChange) {
+            const valueChanges = ctrl.valueChanges as EventEmitter<any>;
+            valueChanges.emit(ctrl.value);
+        }
+
+        // emit if status change
+        anyStatusChange = anyStatusChange || ctrl.status !== oldStatus;
+        if (anyStatusChange) {
                 const statusChanges = ctrl.statusChanges as EventEmitter<any>;
                 statusChanges.emit(ctrl.status);
-            }
         }
-
 
         /* update ancestors */
         if (isRoot) {
             ctrl.parent?.updateValueAndValidity({ onlySelf: false, emitEvent: true });
         }
 
-        return anyStatusChanges;
+        return { anyValueChange, anyStatusChange };
     }
 
     static invalid(errMsg?: ValidationErrors): ValidatorFn {
