@@ -1,11 +1,25 @@
 import { EventEmitter } from '@angular/core';
-import { AbstractControl, FormArray, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { Observable, asapScheduler } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { ConditionalValidatorBuilder } from './conditional-validator-builder';
 import { ConditionalValidatorHelper } from './conditional-validator-helper';
 
 // @dynamic
 export class CondValidator {
+
+    static bindUpdate(control: AbstractControl) {
+        this.updateTreeValidity(control);
+        const subscription = control.valueChanges
+            .pipe(
+                // run after other valueChanges subscription, but before Angular dirty check
+                debounceTime(0, asapScheduler)
+            ).subscribe(() => {
+                CondValidator.updateTreeValidity(control);
+            });
+
+        return subscription;
+    }
 
     static when(condition: (helper: ConditionalValidatorHelper) => boolean) {
         return new ConditionalValidatorBuilder(new ConditionalValidatorHelper(), [condition]);
@@ -73,8 +87,8 @@ export class CondValidator {
         // emit if status change
         anyStatusChange = anyStatusChange || ctrl.status !== oldStatus;
         if (anyStatusChange) {
-                const statusChanges = ctrl.statusChanges as EventEmitter<any>;
-                statusChanges.emit(ctrl.status);
+            const statusChanges = ctrl.statusChanges as EventEmitter<any>;
+            statusChanges.emit(ctrl.status);
         }
 
         /* update ancestors */

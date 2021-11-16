@@ -1,12 +1,6 @@
 # ng-conditional-validator
 Angular library help you to build reactive forms dynamic validation
 
-## Features
-✅ Dynamic nested form validation<br>
-✅ Based on the original angular form, not the customized version<br>
-✅ Works with other stateless validator<br>
-✅ Filter out effective value<br>
-
 ## Quickstart
 
 ### Install
@@ -44,8 +38,14 @@ const contactMe = CondValidator.when(query => query.selectValue('dontContactMe')
 const contactByEmail = contactMe.when(query => query.selectValue('contactBy') === 'email');
 ```
 
+### `bindUpdate(form)`
+binding automatic update for your form state
+```typescript
+CondValidator.bindUpdate(this.formDemo1);
+```
+
 ### `updateTreeValidity(form)`
-update your form validation
+update your form state
 ```typescript
 CondValidator.updateTreeValidity(this.formDemo1);
 ```
@@ -63,12 +63,7 @@ buildDemo1() {
         email: ['', contactByEmail.then(Validators.required)]
     });
 
-    CondValidator.updateTreeValidity(this.formDemo1);
-    this.formDemo1.valueChanges.subscribe(() => {
-        // your code here ...
-
-        CondValidator.updateTreeValidity(this.formDemo1);
-    });
+    CondValidator.bindUpdate(this.formDemo1);
     
     console.log(this.formDemo1.value); // { dontContactMe: false, contactBy: '', email: '' }
 }
@@ -88,12 +83,7 @@ buildDemo3() {
         email: ['', contactByEmail.enable(Validators.required)]
     });
 
-    CondValidator.updateTreeValidity(this.formDemo3);
-    this.formDemo3.valueChanges.subscribe(() => {
-        // your code here ...
-
-        CondValidator.updateTreeValidity(this.formDemo3);
-    });
+    CondValidator.bindUpdate(this.formDemo3);
 
     console.log(this.formDemo3.value); // { dontContactMe: false }
 }
@@ -115,12 +105,7 @@ buildDemo5(){
         email: ['', contactByEmail.then(Validators.required, { resetBy: '' })]
     });
 
-    CondValidator.updateTreeValidity(this.formDemo5);
-    this.formDemo5.valueChanges.subscribe(() => {
-        // your code here ...
-
-        CondValidator.updateTreeValidity(this.formDemo5);
-    });
+    CondValidator.bindUpdate(this.formDemo5);
 }
 ```
 
@@ -140,12 +125,7 @@ buildDemo1() {
         }]
     });
 
-    CondValidator.updateTreeValidity(this.formDemo1);
-    this.formDemo1.valueChanges.subscribe(() => {
-        // your code here ...
-
-        CondValidator.updateTreeValidity(this.formDemo1);
-    });
+    CondValidator.bindUpdate(this.formDemo1);
 }
 ```
 
@@ -162,11 +142,6 @@ buildDemo2() {
         validators: notEqual.then(CondValidator.invalid()) // this line help you check repeat password
     });
 
-    CondValidator.updateTreeValidity(this.formDemo2);
-    this.formDemo2.valueChanges.subscribe(() => {
-        // your code here ...
-
-        CondValidator.updateTreeValidity(this.formDemo2);
-    });
+    CondValidator.bindUpdate(this.formDemo2);
 }
 ```

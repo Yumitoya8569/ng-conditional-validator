@@ -48,10 +48,7 @@ export class ShowCaseComponent implements OnInit {
             }]
         });
 
-        CondValidator.updateTreeValidity(this.formDemo1);
-        this.formDemo1.valueChanges.subscribe(() => {
-            CondValidator.updateTreeValidity(this.formDemo1);
-        });
+        CondValidator.bindUpdate(this.formDemo1);
     }
 
     buildDemo2() {
@@ -64,10 +61,7 @@ export class ShowCaseComponent implements OnInit {
             validators: notEqual.then(CondValidator.invalid())
         });
 
-        CondValidator.updateTreeValidity(this.formDemo2);
-        this.formDemo2.valueChanges.subscribe(() => {
-            CondValidator.updateTreeValidity(this.formDemo2);
-        });
+        CondValidator.bindUpdate(this.formDemo2);
     }
 
     buildDemo3() {
@@ -80,10 +74,7 @@ export class ShowCaseComponent implements OnInit {
             email: ['', contactByEmail.enable(Validators.required)]
         });
 
-        CondValidator.updateTreeValidity(this.formDemo3);
-        this.formDemo3.valueChanges.subscribe(() => {
-            CondValidator.updateTreeValidity(this.formDemo3);
-        });
+        CondValidator.bindUpdate(this.formDemo3);
     }
 
     buildDemo4() {
@@ -106,10 +97,7 @@ export class ShowCaseComponent implements OnInit {
             })
         });
 
-        CondValidator.updateTreeValidity(this.formDemo4);
-        this.formDemo4.valueChanges.subscribe(() => {
-            CondValidator.updateTreeValidity(this.formDemo4);
-        });
+        CondValidator.bindUpdate(this.formDemo4);
     }
 
     buildDemo5(){
@@ -122,10 +110,7 @@ export class ShowCaseComponent implements OnInit {
             email: ['', contactByEmail.then(Validators.required, { resetBy: '' })]
         });
 
-        CondValidator.updateTreeValidity(this.formDemo5);
-        this.formDemo5.valueChanges.subscribe(() => {
-            CondValidator.updateTreeValidity(this.formDemo5);
-        });
+        CondValidator.bindUpdate(this.formDemo5);
     }
 
     asyncEmailValidator(control: AbstractControl): Observable<ValidationErrors | null> {
