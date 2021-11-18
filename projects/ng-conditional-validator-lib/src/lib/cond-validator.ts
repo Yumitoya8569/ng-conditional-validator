@@ -28,6 +28,7 @@ export class CondValidator {
     static updateTreeValidity(control: AbstractControl, isRoot = true) {
         const oldStatus = control.status;
         const oldValue = control.value;
+        const oldDisabled = control.disabled;
         let ctrl = control as ConditionalControl;
         let anyValueChange = false;
         let anyStatusChange = false;
@@ -62,11 +63,6 @@ export class CondValidator {
         // update ctrl
         ctrl.updateValueAndValidity({ onlySelf: true, emitEvent: false });
 
-        // do noting, whe ctrl is disabled
-        if (ctrl.disabled) {
-            return { anyValueChange, anyStatusChange };
-        }
-
         // reset value if ctrl is not pass condition, when use reset option
         if (ctrl.conditionReset !== undefined) {
             ctrl.setValue('', { onlySelf: true, emitEvent: false });
@@ -78,14 +74,14 @@ export class CondValidator {
         }
 
         // emit if value change
-        anyValueChange = anyValueChange || (isFormControl && ctrl.value !== oldValue);
+        anyValueChange = anyValueChange || (ctrl.disabled !== oldDisabled) || (isFormControl && ctrl.value !== oldValue);
         if (anyValueChange) {
             const valueChanges = ctrl.valueChanges as EventEmitter<any>;
             valueChanges.emit(ctrl.value);
         }
 
         // emit if status change
-        anyStatusChange = anyStatusChange || ctrl.status !== oldStatus;
+        anyStatusChange = anyStatusChange || (ctrl.status !== oldStatus);
         if (anyStatusChange) {
             const statusChanges = ctrl.statusChanges as EventEmitter<any>;
             statusChanges.emit(ctrl.status);
