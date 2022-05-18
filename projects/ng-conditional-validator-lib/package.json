@@ -1,6 +1,6 @@
 {
   "name": "ng-conditional-validator",
-  "version": "1.1.2",
+  "version": "1.1.4",
   "keywords": [
     "angular",
     "reactive",
@@ -24,10 +24,11 @@
     "url": "https://github.com/Yumitoya8569/ng-conditional-validator/issues"
   },
   "peerDependencies": {
-    "@angular/common": "^11.0.9",
-    "@angular/core": "^11.0.9"
+    "@angular/common": ">=9.0.0",
+    "@angular/core": ">=9.0.0",
+    "rxjs": ">=6.0.0"
   },
   "dependencies": {
-    "tslib": "^2.0.0"
+    "tslib": ">=1.10.0"
   }
 }
